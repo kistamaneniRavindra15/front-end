@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag and Drop Example</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to bottom, #f1f1f1, #eaeaea);
+  }
+
+  h1 {
+    text-align: center;
+  }
+  .container-wrapper {
+    display: flex;
+  }
+  .container {
+    width: 400px;
+    height: 400px;
+    border: 2px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out;
+  }
+  .container:hover {
+    background-color: #f8f8f8;
+  }
+  .item {
+    width: 100px;
+    height: 100px;
+    background-color: #f2f2f2;
+    border: 2px solid #999;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: move;
+    border-radius: 5px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .item:hover {
+    background-color: #e0e0e0;
+  }
+  .droppable {
+    background-color: #e0e0e0;
+  }
+  .item {
+    opacity: 0.5;
+    cursor: grabbing;
+    background-color: #E91E63;
+  }
+  .message {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  .reset-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .reset-button:hover {
+    background-color: #45a049;
+  }
+  #secondContainer {
+    background-color: blanchedalmond;
+  }
+  #firstContainer {
+    background-color: lightsteelblue;
+  }
+  </style>
+</head>
+<body>
+  <h2>Drag and Drop Example</h2>
+
+  <!-- First Container -->
+
+<div class="container-wrapper">
+  <div class="container" id="firstContainer" ondrop="drop(event)" ondragover="allowDrop(event)">
+    <div class="item" draggable="true" ondragstart="drag(event)" id="item1" >Item 1</div>
+    <div class="item" draggable="true" ondragstart="drag(event)" id="item2" >Item 2</div>
+    <div class="item" draggable="true" ondragstart="drag(event)" id="item3" >Item 3</div>
+  </div>
+
+  <!-- Second Container -->
+
+  <div class="container" id="secondContainer" ondrop="drop(event)" ondragover="allowDrop(event)">
+  </div>
+</div>
+ 
+  <!-- Message Element -->
+
+ <p class="message" id="message"></p>
+
+  <!-- Reset Button -->
+
+ <button class="reset-button" onclick="resetContainers()">Reset</button>
+
+<script>
+    // Store the original HTML content of the first container
+    var originalContainer1Content = document.querySelector('.container:first-child').innerHTML;
+    // Get reference to the second container
+    var container2 = document.querySelector('.container:nth-child(2)');
+    
+     // Function to allow dropping on containers
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+    
+     // Function to handle dragging of items
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+    // Function to handle dropping of items
+    function drop(event,containerId) {
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text");
+      var sourceContainerId = event.dataTransfer.getData("sourceContainerId");
+      var container = document.getElementById(containerId);
+      var element = document.getElementById(data);
+      event.target.appendChild(element);
+      alert("Drop is done!");
+
+      if (sourceContainerId !== containerId) {
+        var item = document.createElement("div");
+        item.className = "item";
+        item.innerHTML = data;
+        container.appendChild(item);
+        document.getElementById("message").innerHTML = "Drop is done.";
+      } else {
+        document.getElementById("message").innerHTML = "Can't drop an item in the same container.";
+      }
+      resetDraggingItems();
+    }
+    // Function to reset the dragging items
+    function resetDraggingItems() {
+      var draggingItems = document.getElementsByClassName("dragging");
+      for (var i = 0; i < draggingItems.length; i++) {
+        draggingItems[i].classList.remove("dragging");
+      }
+    }
+    // Function to reset the containers
+    function resetContainers() {
+      // Reset the HTML content of the first container to its original state
+      document.querySelector('.container:first-child').innerHTML = originalContainer1Content;
+      // Clear the second container by setting its innerHTML to an empty string
+      container2.innerHTML = "";
+      // Clear the message by setting its innerHTML to an empty string
+      document.getElementById("message").innerHTML = "";
+    }
+</script>
+</body>
+</html>
